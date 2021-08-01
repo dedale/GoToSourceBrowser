@@ -1,0 +1,54 @@
+﻿<Project>
+  <!--
+    SDK must be imported explicitly
+    Example: https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/StyleCop.Analyzers/StyleCop.Analyzers.Vsix/StyleCop.Analyzers.Vsix.csproj
+  -->
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <TargetFramework>net48</TargetFramework>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(ComSpec)</StartProgram>
+    <StartArguments>/c call $(MSBuildProjectDirectory)\Run.cmd $(Configuration)</StartArguments>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.0.206" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.11.13" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Design" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="GoToSourceBrowser.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- https://docs.microsoft.com/en-us/visualstudio/extensibility/internals/how-to-create-a-dot-vsct-file?view=vs-2019 -->
+    <VSCTCompile Include="Package.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
+    </VSCTCompile>
+  </ItemGroup>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="Exists('$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets')" />
+  <!--
+    Fix to include dependencies in vsix
+    C.f. https://github.com/dotnet/sdk/issues/3662
+    C.f. MSBuild\Microsoft\VisualStudio\v16.0\VSSDK $ notepad Microsoft.VsSDK.targets
+  -->
+  <Target Name="_FixIncludeCopyLocalReferencesInVSIXContainer" BeforeTargets="GetVsixSourceItems">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Update="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != ''">
+        <NuGetSourceType>Package</NuGetSourceType>
+      </ReferenceCopyLocalPaths>
+    </ItemGroup>
+  </Target>
+</Project>

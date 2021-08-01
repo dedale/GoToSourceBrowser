@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<!--
+  https://github.com/microsoft/VSSDK-Extensibility-Samples/blob/master/Menu_And_Commands/C%23/PkgCmd.vsct
+-->
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h" />
+  <Include href="KnownImageIds.vsct" />
+
+  <Commands package="PackageGuid">
+    <Groups>
+      <!-- Group child of code window context menu -->
+      <Group guid="PackageGroupGuid" id="EditorContextMenuGroup" priority="0x001">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="PackageGroupGuid" id="GoToSourceBrowserCommandId" priority="0x001">
+        <Parent guid="PackageGroupGuid" id="EditorContextMenuGroup" />
+        <!-- Available ids: https://docs.microsoft.com/fr-fr/dotnet/api/microsoft.visualstudio.imaging.knownimageids?view=visualstudiosdk-2019 -->
+        <Icon guid="ImageCatalogGuid" id="GoToSourceCode" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <!-- Hide command when disabled -->
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Go To Source Browser</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <!-- Equals SourcePackage.PackageGuidString -->
+    <GuidSymbol name="PackageGuid" value="{68413A97-1DE9-49B3-977A-8A96E82627AE}" />
+
+    <!-- Equals Command.GroupGuid -->
+    <GuidSymbol name="PackageGroupGuid" value="{8C8FAD7E-477F-41FD-AFA4-A9762680C226}">
+      <IDSymbol name="EditorContextMenuGroup" value="0x1001" />
+
+      <IDSymbol name="GoToSourceBrowserCommandId" value="0x2001" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
