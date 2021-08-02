@@ -42,7 +42,7 @@
   <!--
     Fix to include dependencies in vsix
     C.f. https://github.com/dotnet/sdk/issues/3662
-    C.f. MSBuild\Microsoft\VisualStudio\v16.0\VSSDK $ notepad Microsoft.VsSDK.targets
+    C.f. MSBuild\Microsoft\VisualStudio\v16.0\VSSDK\Microsoft.VsSDK.targets
   -->
   <Target Name="_FixIncludeCopyLocalReferencesInVSIXContainer" BeforeTargets="GetVsixSourceItems">
     <ItemGroup>
